@@ -37,6 +37,7 @@ export default async function links(req: NextApiRequest, res: NextApiResponse) {
     const links = await getLinks(user.id, convertedData);
     return res.status(links.status).json({ response: links.response });
   } else if (req.method === "POST") {
+    console.log(req.body);
     const newlink = await postLink(req.body, user.id);
     return res.status(newlink.status).json({
       response: newlink.response,
