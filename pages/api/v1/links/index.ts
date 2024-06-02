@@ -5,6 +5,7 @@ import { LinkRequestQuery } from "@/types/global";
 import verifyUser from "@/lib/api/verifyUser";
 import deleteLinksById from "@/lib/api/controllers/links/bulk/deleteLinksById";
 import updateLinks from "@/lib/api/controllers/links/bulk/updateLinks";
+import formidable from "formidable";
 
 export default async function links(req: NextApiRequest, res: NextApiResponse) {
   const user = await verifyUser({ req, res });
@@ -37,7 +38,17 @@ export default async function links(req: NextApiRequest, res: NextApiResponse) {
     const links = await getLinks(user.id, convertedData);
     return res.status(links.status).json({ response: links.response });
   } else if (req.method === "POST") {
-    console.log(req.body);
+    console.log("PARSING FORM");
+    const form = formidable(req.body);
+    let fields, files;
+    try {
+      [fields, files] = await form.parse(req.body);
+    } catch (err) {
+      return res.status(400).json({
+        response: "Invalid request.",
+      });
+    }
+    console.log(fields);
     const newlink = await postLink(req.body, user.id);
     return res.status(newlink.status).json({
       response: newlink.response,

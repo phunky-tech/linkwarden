@@ -17,7 +17,7 @@ export default async function postLink(
   } catch (error) {
     return {
       response:
-        "Please enter a valid Address for the Link. (It should start with http/https)",
+        "Please enter a valid Address for the Link. (It should start with http/https)\n" + link.url + "\n" + (link as any).text,
       status: 400,
     };
   }
